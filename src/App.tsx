@@ -1,22 +1,34 @@
 import { useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
 
-// استبدل القيم أدناه بالقيم التي لديك في Supabase
-const supabase = createClient('URL_SUPABASE_الخاص_بك', 'ANON_KEY_الخاص_بك');
+const supabase = createClient(
+  'https://meaowbpwyliwajcqzmed.supabase.co', 
+  'sb_secret_oz1nE_Q4fHkhp08eA_3rEw_PVk6W23S'
+);
 
 export default function App() {
   useEffect(() => {
-    async function fetchData() {
-      const { data, error } = await supabase.from('اسم_الجدول_الخاص_بك').select('*');
-      if (error) {
-        console.error('حدث خطأ أثناء جلب البيانات:', error);
-      } else {
-        console.log('تم جلب البيانات بنجاح:', data);
-        alert('تم العثور على البيانات! تحقق من الـ Console');
-      }
+    async function getData() {
+      // جلب البيانات من جدول الهواتف
+      const { data: phones, error: phonesError } = await supabase.from('phones').select('*');
+      
+      // جلب البيانات من جدول السيارات
+      const { data: cars, error: carsError } = await supabase.from('cars').select('*');
+      
+      if (phonesError) console.error('خطأ في جدول phones:', phonesError);
+      else console.log('بيانات الهواتف:', phones);
+
+      if (carsError) console.error('خطأ في جدول cars:', carsError);
+      else console.log('بيانات السيارات:', cars);
     }
-    fetchData();
+    getData();
   }, []);
 
-  return <h1>مرحباً، افتح الـ Console في المتصفح لرؤية البيانات!</h1>;
+  return (
+    <div style={{ padding: '20px' }}>
+      <h1>تم تحديث التطبيق</h1>
+      <p>جاري جلب البيانات من جداول الهواتف والسيارات...</p>
+      <p>افتح الـ Console لرؤية النتائج.</p>
+    </div>
+  );
 }
